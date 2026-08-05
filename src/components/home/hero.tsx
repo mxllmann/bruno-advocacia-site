@@ -1,21 +1,26 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { site, whatsappUrl } from "@/lib/site";
+import { spring } from "@/lib/motion";
 import { Button } from "@/components/ui/button";
-import { AnimatedHeading } from "@/components/ui/animated-heading";
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
 
-const container = {
+const container: Variants = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
+  visible: { transition: { staggerChildren: 0.09, delayChildren: 0.1 } },
 };
-const item = {
-  hidden: { opacity: 0, y: 20 },
+
+const item: Variants = {
+  hidden: { opacity: 0, y: 22 },
+  visible: { opacity: 1, y: 0, transition: spring.default },
+};
+
+const underline: Variants = {
+  hidden: { scaleX: 0 },
   visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] as const },
+    scaleX: 1,
+    transition: { type: "spring", bounce: 0, duration: 0.8, delay: 0.9 },
   },
 };
 
@@ -23,14 +28,15 @@ export function Hero() {
   return (
     <section
       id="top"
-      className="relative flex min-h-[92vh] items-center overflow-hidden pt-28 pb-20"
+      className="grain relative flex min-h-svh items-center overflow-hidden pt-32 pb-24"
     >
-      {/* Ambient background — cheap radial gradients (no expensive blur) */}
+      {/* Ambient depth — layered radial glows, cheap (no blur filter). */}
       <div
+        aria-hidden
         className="pointer-events-none absolute inset-0 -z-10"
         style={{
           background:
-            "radial-gradient(55% 45% at 50% -5%, rgba(194,168,120,0.12), transparent 60%), radial-gradient(120% 80% at 50% 0%, transparent 45%, rgba(0,0,0,0.5) 100%)",
+            "radial-gradient(60% 50% at 50% -8%, rgba(194,168,120,0.16), transparent 62%), radial-gradient(40% 40% at 85% 15%, rgba(154,133,87,0.10), transparent 60%), radial-gradient(120% 90% at 50% 0%, transparent 40%, rgba(0,0,0,0.55) 100%)",
         }}
       />
 
@@ -38,15 +44,31 @@ export function Hero() {
         variants={container}
         initial="hidden"
         animate="visible"
-        className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-5 sm:px-8 lg:px-12"
+        className="relative mx-auto flex w-full max-w-7xl flex-col gap-8 px-5 sm:px-8 lg:px-12"
       >
-        <AnimatedHeading
-          as="h1"
-          text="Defesa jurídica com excelência e atendimento verdadeiramente próximo."
-          highlight="excelência"
-          underline
-          className="max-w-4xl font-serif text-4xl leading-[1.12] text-foreground sm:text-6xl lg:text-[4.25rem]"
-        />
+        <motion.span
+          variants={item}
+          className="eyebrow flex items-center gap-3 text-[0.7rem] font-semibold text-gold/90"
+        >
+          <span className="h-px w-8 bg-gold/50" />
+          Advocacia em Florianópolis · {site.oab}
+        </motion.span>
+
+        <motion.h1
+          variants={item}
+          className="display max-w-4xl text-[2.6rem] text-foreground sm:text-6xl lg:text-[4.25rem]"
+        >
+          Defesa jurídica com{" "}
+          <span className="relative inline-block text-gold">
+            excelência
+            <motion.span
+              aria-hidden
+              variants={underline}
+              className="absolute -bottom-1 left-0 h-[0.08em] w-full origin-left rounded-full bg-linear-to-r from-gold-deep via-gold to-gold-bright"
+            />
+          </span>{" "}
+          e atendimento verdadeiramente próximo.
+        </motion.h1>
 
         <motion.p
           variants={item}
@@ -55,7 +77,10 @@ export function Hero() {
           {site.description}
         </motion.p>
 
-        <motion.div variants={item} className="flex flex-wrap items-center gap-3">
+        <motion.div
+          variants={item}
+          className="mt-8 flex flex-wrap items-center gap-3 sm:mt-10"
+        >
           <Button asChild size="lg">
             <a href="#contato">Fale com um advogado</a>
           </Button>
@@ -64,6 +89,25 @@ export function Hero() {
           </InteractiveHoverButton>
         </motion.div>
       </motion.div>
+
+      {/* Scroll cue */}
+      <motion.a
+        href="#areas"
+        aria-label="Rolar para as áreas de atuação"
+        className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-muted-foreground/60 transition-colors hover:text-gold md:flex"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2, duration: 0.6 }}
+      >
+        <span className="eyebrow text-[0.6rem] font-medium">Explore</span>
+        <span className="relative flex h-9 w-5 justify-center rounded-full border border-current pt-1.5">
+          <motion.span
+            className="h-1.5 w-1 rounded-full bg-current"
+            animate={{ y: [0, 8, 0], opacity: [1, 0.3, 1] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </span>
+      </motion.a>
     </section>
   );
 }

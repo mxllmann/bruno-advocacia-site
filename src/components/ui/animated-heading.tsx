@@ -1,42 +1,9 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { motion, type Variants } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { Highlighter } from "./highlighter";
-
-const container: Variants = {
-  hidden: {},
-  visible: (delay: number = 0) => ({
-    transition: { staggerChildren: 0.05, delayChildren: delay },
-  }),
-};
-
-const wordVariant: Variants = {
-  hidden: { opacity: 0, y: "0.5em" },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
-  },
-};
-
-function Words({ text, className }: { text: string; className?: string }) {
-  const words = text.split(" ").filter(Boolean);
-  return (
-    <>
-      {words.map((w, i) => (
-        <motion.span
-          key={`${w}-${i}`}
-          variants={wordVariant}
-          className={cn("inline-block whitespace-pre", className)}
-        >
-          {w}
-          {" "}
-        </motion.span>
-      ))}
-    </>
-  );
-}
+import { spring, inViewport } from "@/lib/motion";
 
 type Tag = "h1" | "h2" | "h3" | "p" | "span";
 
@@ -47,10 +14,53 @@ type AnimatedHeadingProps = {
   /** substring to emphasize in gold */
   highlight?: string;
   highlightClassName?: string;
-  /** draw an animated (rough-notation) underline under the highlight */
+  /** draw a precise animated underline beneath the highlight */
   underline?: boolean;
   delay?: number;
 };
+
+const headingVariants: Variants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: (delay: number = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { ...spring.default, delay },
+  }),
+};
+
+const underlineVariants: Variants = {
+  hidden: { scaleX: 0 },
+  visible: (delay: number = 0) => ({
+    scaleX: 1,
+    transition: { type: "spring", bounce: 0, duration: 0.7, delay: delay + 0.35 },
+  }),
+};
+
+function Highlight({
+  text,
+  className,
+  underline,
+  delay,
+}: {
+  text: string;
+  className?: string;
+  underline?: boolean;
+  delay: number;
+}) {
+  return (
+    <span className={cn("relative inline-block", className)}>
+      {text}
+      {underline && (
+        <motion.span
+          aria-hidden
+          className="absolute -bottom-1 left-0 h-[0.09em] w-full origin-left rounded-full bg-linear-to-r from-gold-deep via-gold to-gold-bright"
+          variants={underlineVariants}
+          custom={delay}
+        />
+      )}
+    </span>
+  );
+}
 
 export function AnimatedHeading({
   text,
@@ -63,43 +73,34 @@ export function AnimatedHeading({
 }: AnimatedHeadingProps) {
   const MotionTag = motion[as];
 
-  let content;
   const idx = highlight ? text.indexOf(highlight) : -1;
+
+  let content: ReactNode;
   if (highlight && idx >= 0) {
-    const pre = text.slice(0, idx);
-    const post = text.slice(idx + highlight.length);
-    const hlWords = <Words text={highlight} className={highlightClassName} />;
     content = (
       <>
-        {pre && <Words text={pre} />}
-        {underline ? (
-          <Highlighter
-            action="underline"
-            color="#c2a878"
-            strokeWidth={2}
-            padding={6}
-          >
-            {hlWords}
-          </Highlighter>
-        ) : (
-          hlWords
-        )}
-        {post && <Words text={post} />}
+        {text.slice(0, idx)}
+        <Highlight
+          text={highlight}
+          className={highlightClassName}
+          underline={underline}
+          delay={delay}
+        />
+        {text.slice(idx + highlight.length)}
       </>
     );
   } else {
-    content = <Words text={text} />;
+    content = text;
   }
 
   return (
     <MotionTag
-      aria-label={text}
-      className={className}
+      className={cn("text-balance", className)}
       custom={delay}
-      variants={container}
+      variants={headingVariants}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: "-80px" }}
+      viewport={inViewport}
     >
       {content}
     </MotionTag>

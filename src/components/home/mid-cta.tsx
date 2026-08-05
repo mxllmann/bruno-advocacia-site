@@ -13,7 +13,7 @@ export function MidCta() {
   return (
     <section className="relative py-24 sm:py-28">
       <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12">
-        <div className="relative overflow-hidden rounded-3xl border border-gold/25 bg-gradient-to-br from-surface-2 to-surface p-8 sm:p-12">
+        <div className="relative overflow-hidden rounded-3xl border border-gold/25 bg-linear-to-br from-surface-2 to-surface p-8 sm:p-12">
           <div className="pointer-events-none absolute -left-16 -top-16 h-64 w-64 rounded-full bg-gold/10 blur-[100px]" />
           <div className="pointer-events-none absolute right-0 bottom-0 h-64 w-64 rounded-full bg-gold-deep/10 blur-[100px]" />
 

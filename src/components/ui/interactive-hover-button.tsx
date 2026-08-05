@@ -32,7 +32,7 @@ export function InteractiveHoverButton({
       target={href && !isInternal ? "_blank" : undefined}
       rel={href && !isInternal ? "noopener noreferrer" : undefined}
       className={cn(
-        "group relative inline-flex h-13 cursor-pointer items-center overflow-hidden rounded-full border px-4 text-center text-[0.95rem] font-medium transition-colors duration-300",
+        "group relative inline-flex h-13 cursor-pointer items-center overflow-hidden rounded-full border px-4 text-center text-[0.95rem] font-medium transition-[transform,background-color,border-color] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97]",
         base,
         className,
       )}

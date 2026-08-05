@@ -24,74 +24,134 @@
   --radius-xl: calc(var(--radius) + 4px);
   --radius-2xl: calc(var(--radius) + 8px);
 
-  --animate-shimmer: shimmer 6s linear infinite;
-  --animate-float-slow: float-slow 7s ease-in-out infinite;
-  --animate-bounce-soft: bounce-soft 1.8s ease-in-out infinite;
-
-  @keyframes shimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
-  }
-  @keyframes float-slow {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-  }
-  @keyframes bounce-soft {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
-  }
+  /* Emil-style strong easing curves — the built-in CSS easings lack punch. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 :root {
-  --radius: 0.75rem;
+  --radius: 0.875rem;
 
-  --background: #0b0b0d;
-  --foreground: #e7e3da;
+  /* Warm near-black — a touch of brown so the gold reads as light on wood,
+     not a cold UI accent. */
+  --background: #0a0908;
+  --foreground: #ece7dc;
 
-  --surface: #131315;
-  --surface-2: #1a1a1d;
-  --border: #262629;
-  --muted: #161618;
-  --muted-foreground: #9a978f;
+  --surface: #121110;
+  --surface-2: #1a1917;
+  --border: #272522;
+  --muted: #151413;
+  --muted-foreground: #a09a8e;
 
   /* soft champagne gold — dessaturado, próximo da logo */
   --gold: #c2a878;
-  --gold-soft: #d3bf98;
-  --gold-bright: #e4d4ac;
+  --gold-soft: #d6c199;
+  --gold-bright: #e7d8b0;
   --gold-deep: #9a8557;
+
+  /* Translucent material tints (used with backdrop-filter) */
+  --glass: color-mix(in oklab, var(--background) 62%, transparent);
+  --glass-strong: color-mix(in oklab, var(--background) 82%, transparent);
 }
 
 @layer base {
   * {
     border-color: var(--border);
   }
+
   html {
     scroll-behavior: smooth;
     /* offset for the fixed header when jumping to anchors */
-    scroll-padding-top: 6rem;
+    scroll-padding-top: 6.5rem;
   }
-  @media (prefers-reduced-motion: reduce) {
-    html {
-      scroll-behavior: auto;
-    }
-  }
+
   body {
     background-color: var(--background);
     color: var(--foreground);
     font-family: var(--font-inter), Arial, Helvetica, sans-serif;
+    font-synthesis-weight: none;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
   }
+
+  /* Size-specific typography (Apple §15): large text tightens tracking + leading,
+     body stays near 0. Applied through .display / .headline utilities. */
+  .display {
+    font-family: var(--font-marcellus), Georgia, serif;
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    font-optical-sizing: auto;
+  }
+  .headline {
+    font-family: var(--font-marcellus), Georgia, serif;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    font-optical-sizing: auto;
+  }
+  .eyebrow {
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+
   ::selection {
     background: var(--gold);
-    color: #0a0a0c;
+    color: #0a0908;
+  }
+
+  :focus-visible {
+    outline: 2px solid color-mix(in oklab, var(--gold) 70%, transparent);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
   }
 }
 
-/* Reusable helpers */
+/* ---------- Materials & depth (Apple §12) ---------- */
+
+/* Translucent chrome: content scrolls underneath a real material layer. */
+.glass {
+  background: var(--glass);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+}
+.glass-strong {
+  background: var(--glass-strong);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+}
+
+/* Frostier / solid when the user asks for less transparency. */
+@media (prefers-reduced-transparency: reduce) {
+  .glass,
+  .glass-strong {
+    background: var(--background);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* ---------- Reusable helpers ---------- */
+
 .text-gold-gradient {
-  background: linear-gradient(120deg, var(--gold-deep), var(--gold-bright), var(--gold));
-  background-size: 200% auto;
+  background: linear-gradient(
+    115deg,
+    var(--gold-deep),
+    var(--gold-bright) 45%,
+    var(--gold)
+  );
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -102,9 +162,21 @@
   background: linear-gradient(
     90deg,
     transparent,
-    color-mix(in oklab, var(--gold) 70%, transparent),
+    color-mix(in oklab, var(--gold) 55%, transparent),
     transparent
   );
+}
+
+/* Grain overlay — adds tactile depth to flat dark surfaces without hurting text. */
+.grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 .no-visible-scrollbar {

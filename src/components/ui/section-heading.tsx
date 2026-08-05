@@ -22,15 +22,15 @@ export function SectionHeading({
   return (
     <div
       className={cn(
-        "flex max-w-2xl flex-col gap-4",
+        "flex max-w-2xl flex-col gap-5",
         align === "center" && "mx-auto items-center text-center",
         className,
       )}
     >
       {kicker && (
         <Reveal>
-          <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-gold">
-            <span className="h-px w-6 bg-gold/60" />
+          <span className="eyebrow inline-flex items-center gap-2.5 text-[0.7rem] font-semibold text-gold">
+            <span className="h-px w-6 bg-gold/50" />
             {kicker}
           </span>
         </Reveal>
@@ -39,11 +39,16 @@ export function SectionHeading({
         as="h2"
         text={title}
         highlight={highlight}
-        className="font-serif text-[2.25rem] leading-[1.08] tracking-tight text-foreground sm:text-5xl md:text-[3.5rem]"
+        className="headline text-[2rem] text-foreground sm:text-[2.75rem] md:text-5xl"
       />
       {description && (
         <Reveal index={2}>
-          <p className="text-base leading-relaxed text-muted-foreground">
+          <p
+            className={cn(
+              "text-base leading-relaxed text-muted-foreground sm:text-[1.05rem]",
+              align === "center" && "max-w-xl",
+            )}
+          >
             {description}
           </p>
         </Reveal>

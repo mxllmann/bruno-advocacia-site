@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Marcellus } from "next/font/google";
 import "./globals.css";
 import { site } from "@/lib/site";
+import { Providers } from "./providers";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { FloatingWhatsapp } from "@/components/layout/floating-whatsapp";
@@ -40,10 +41,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${inter.variable} ${marcellus.variable} h-full antialiased`}
     >
       <body className="min-h-full bg-background text-foreground">
-        <SiteHeader />
-        <main>{children}</main>
-        <SiteFooter />
-        <FloatingWhatsapp />
+        <Providers>
+          <SiteHeader />
+          <main>{children}</main>
+          <SiteFooter />
+          <FloatingWhatsapp />
+        </Providers>
       </body>
     </html>
   );

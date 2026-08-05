@@ -20,7 +20,7 @@ export function ContactSection() {
   )}&output=embed`;
 
   return (
-    <section id="contato" className="relative py-20 sm:py-24">
+    <section id="contato" className="relative py-24 sm:py-32">
       <div className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-px max-w-5xl gold-hairline" />
       <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
@@ -31,7 +31,7 @@ export function ContactSection() {
                 as="h2"
                 text="Entre em contato conosco"
                 highlight="contato"
-                className="font-serif text-[2.25rem] leading-[1.08] tracking-tight text-foreground sm:text-5xl md:text-[3.5rem]"
+                className="display text-[2rem] text-foreground sm:text-[2.75rem] md:text-5xl"
               />
               <Reveal index={2}>
                 <p className="max-w-md text-base leading-relaxed text-muted-foreground">
