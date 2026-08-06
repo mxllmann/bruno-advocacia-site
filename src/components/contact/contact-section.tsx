@@ -3,6 +3,7 @@ import { site } from "@/lib/site";
 import { Reveal } from "@/components/ui/reveal";
 import { AnimatedHeading } from "@/components/ui/animated-heading";
 import { LeadForm } from "./lead-form";
+import { LocationMap } from "./location-map";
 
 const info = [
   {
@@ -15,12 +16,12 @@ const info = [
 ];
 
 export function ContactSection() {
-  const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(
-    site.address.mapsQuery,
-  )}&output=embed`;
+  const mapQuery = encodeURIComponent(site.address.mapsQuery);
+  const mapSrc = `https://www.google.com/maps?q=${mapQuery}&output=embed`;
+  const directionsHref = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
 
   return (
-    <section id="contato" className="relative py-24 sm:py-32">
+    <section className="relative py-24 sm:py-32">
       <div className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-px max-w-5xl gold-hairline" />
       <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
@@ -31,7 +32,7 @@ export function ContactSection() {
                 as="h2"
                 text="Entre em contato conosco"
                 highlight="contato"
-                className="display text-[2rem] text-foreground sm:text-[2.75rem] md:text-5xl"
+                className="display w-full text-[2.35rem] text-foreground sm:text-[3.25rem] md:text-6xl"
               />
               <Reveal index={2}>
                 <p className="max-w-md text-base leading-relaxed text-muted-foreground">
@@ -41,6 +42,8 @@ export function ContactSection() {
               </Reveal>
             </div>
 
+            <div id="contato" className="h-0 scroll-mt-24 sm:scroll-mt-28" />
+
             <Reveal index={2}>
               <LeadForm variant="full" />
             </Reveal>
@@ -49,22 +52,7 @@ export function ContactSection() {
           {/* Right — map + compact info */}
           <div className="flex flex-col gap-6">
             <Reveal>
-              <div className="relative overflow-hidden rounded-2xl border border-border">
-                <iframe
-                  title="Localização — Ramos & Pereira Advocacia"
-                  src={mapSrc}
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  className="h-72 w-full sm:h-80"
-                  style={{
-                    border: 0,
-                    filter:
-                      "invert(0.92) hue-rotate(180deg) saturate(0.65) brightness(0.95) contrast(0.9)",
-                  }}
-                  allowFullScreen
-                />
-                <span className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-gold/10" />
-              </div>
+              <LocationMap src={mapSrc} directionsHref={directionsHref} />
             </Reveal>
 
             <Reveal index={1}>

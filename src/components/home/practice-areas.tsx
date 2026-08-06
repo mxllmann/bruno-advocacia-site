@@ -35,13 +35,15 @@ const icons: Record<string, LucideIcon> = {
 
 export function PracticeAreas() {
   return (
-    <section id="areas" className="relative py-24 sm:py-32">
+    <section className="relative py-24 sm:py-32">
       <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12">
         <SectionHeading
           title="Soluções jurídicas para cada demanda"
           highlight="cada demanda"
           description="Atuação judicial e extrajudicial perante qualquer Tribunal ou Comarca do país, com atendimento personalizado, agilidade e ética."
         />
+
+        <div id="areas" className="h-0 scroll-mt-24 sm:scroll-mt-28" />
 
         <div className="mt-16 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {practiceAreas.map((area, i) => {

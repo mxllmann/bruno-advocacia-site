@@ -28,29 +28,35 @@ export function Hero() {
   return (
     <section
       id="top"
-      className="grain relative flex min-h-svh items-center overflow-hidden pt-32 pb-24"
+      className="grain relative isolate flex min-h-svh items-start overflow-hidden bg-background pt-28 pb-[46svh] sm:items-center sm:pt-32 sm:pb-24"
     >
-      {/* Ambient depth — layered radial glows, cheap (no blur filter). */}
+      {/* Hero artwork keeps its intentionally dark left half for copy contrast. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10"
+        className="pointer-events-none absolute right-0 bottom-0 -z-10 h-[48svh] w-full bg-cover bg-[position:68%_center] bg-no-repeat sm:inset-0 sm:h-auto sm:w-auto sm:bg-contain sm:bg-right"
         style={{
-          background:
-            "radial-gradient(60% 50% at 50% -8%, rgba(194,168,120,0.16), transparent 62%), radial-gradient(40% 40% at 85% 15%, rgba(154,133,87,0.10), transparent 60%), radial-gradient(120% 90% at 50% 0%, transparent 40%, rgba(0,0,0,0.55) 100%)",
+          backgroundImage: "url('/background.png')",
         }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-[calc(48svh-10rem)] -z-10 h-40 bg-linear-to-b from-background via-background/85 to-transparent sm:hidden"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(10,9,8,0.94)_0%,rgba(10,9,8,0.78)_48%,rgba(10,9,8,0.20)_72%,rgba(10,9,8,0.68)_100%)] sm:bg-[linear-gradient(90deg,rgba(10,9,8,0.72)_0%,rgba(10,9,8,0.46)_42%,rgba(10,9,8,0.14)_72%),linear-gradient(180deg,rgba(10,9,8,0.30)_0%,rgba(10,9,8,0)_42%,rgba(10,9,8,0.62)_100%)]"
       />
 
       <motion.div
         variants={container}
         initial="hidden"
         animate="visible"
-        className="relative mx-auto flex w-full max-w-7xl flex-col gap-8 px-5 sm:px-8 lg:px-12"
+        className="relative z-10 mx-auto flex w-full max-w-7xl flex-col gap-8 px-5 sm:px-8 lg:px-12"
       >
         <motion.span
           variants={item}
-          className="eyebrow flex items-center gap-3 text-[0.7rem] font-semibold text-gold/90"
+          className="eyebrow text-[0.7rem] font-semibold text-gold/90"
         >
-          <span className="h-px w-8 bg-gold/50" />
           Advocacia em Florianópolis · {site.oab}
         </motion.span>
 

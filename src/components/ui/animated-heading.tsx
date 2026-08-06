@@ -95,7 +95,7 @@ export function AnimatedHeading({
 
   return (
     <MotionTag
-      className={cn("text-balance", className)}
+      className={className}
       custom={delay}
       variants={headingVariants}
       initial="hidden"

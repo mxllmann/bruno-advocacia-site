@@ -12,7 +12,7 @@ function initials(name: string) {
 
 export function Team() {
   return (
-    <section id="equipe" className="relative py-24 sm:py-32">
+    <section className="relative py-24 sm:py-32">
       <div className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-px max-w-5xl gold-hairline" />
       <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12">
         <SectionHeading
@@ -20,6 +20,8 @@ export function Team() {
           highlight="dedicados"
           description="Profissionais experientes, unidos pelo compromisso com a ética e com o melhor resultado para o cliente."
         />
+
+        <div id="equipe" className="h-0 scroll-mt-8 sm:scroll-mt-12" />
 
         <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {team.map((member, i) => (

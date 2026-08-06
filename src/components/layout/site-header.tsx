@@ -47,7 +47,7 @@ export function SiteHeader() {
     >
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-4 sm:px-8 lg:px-12">
         <Link
-          href="#top"
+          href="/"
           aria-label="Ramos & Pereira Advocacia — início"
           className="transition-transform duration-200 ease-out active:scale-[0.97]"
         >

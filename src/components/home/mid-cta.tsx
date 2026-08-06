@@ -27,7 +27,7 @@ export function MidCta() {
                   as="h2"
                   text="Precisa de orientação jurídica? Estamos prontos."
                   highlight="Estamos prontos."
-                  className="font-serif text-3xl leading-tight text-foreground sm:text-4xl"
+                  className="w-full font-serif text-[2.35rem] leading-tight text-foreground sm:text-[3.25rem]"
                 />
                 <p className="max-w-md text-base leading-relaxed text-muted-foreground">
                   Conte o seu caso em poucas linhas. Retornamos com a melhor

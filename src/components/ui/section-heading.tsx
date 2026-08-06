@@ -22,7 +22,7 @@ export function SectionHeading({
   return (
     <div
       className={cn(
-        "flex max-w-2xl flex-col gap-5",
+        "flex w-full max-w-5xl flex-col gap-5",
         align === "center" && "mx-auto items-center text-center",
         className,
       )}
@@ -39,7 +39,7 @@ export function SectionHeading({
         as="h2"
         text={title}
         highlight={highlight}
-        className="headline text-[2rem] text-foreground sm:text-[2.75rem] md:text-5xl"
+        className="headline w-full text-[2.35rem] text-foreground sm:text-[3.25rem] md:text-6xl"
       />
       {description && (
         <Reveal index={2}>
