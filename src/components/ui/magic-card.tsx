@@ -12,8 +12,8 @@ import { cn } from "@/lib/utils";
 
 /**
  * MagicCard (adapted from MagicUI) — an interactive card whose gradient border
- * follows the cursor. Trimmed for this project: the site is
- * dark-only, so next-themes is dropped, and colors default to the gold palette.
+ * follows the cursor. Trimmed for this project: colors are driven by the gold
+ * palette CSS variables, so the card follows the active (light/dark) theme.
  */
 type MagicCardProps = {
   children?: React.ReactNode;

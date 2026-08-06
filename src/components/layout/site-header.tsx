@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import WhatsApp from "@mui/icons-material/WhatsApp";
@@ -11,6 +12,94 @@ import { spring } from "@/lib/motion";
 import { Logo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
+import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
+
+// Round icon-button chrome shared by the theme toggle and the menu triggers.
+const iconButton =
+  "grid h-11 w-11 place-items-center rounded-full border border-gold/25 text-gold transition-[transform,background-color] duration-200 ease-out hover:bg-gold/10 active:scale-[0.94] [&_svg]:h-5 [&_svg]:w-5";
+
+function MobileDrawer({
+  open,
+  onClose,
+}: {
+  open: boolean;
+  onClose: () => void;
+}) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) return null;
+
+  return createPortal(
+    <AnimatePresence>
+      {open && (
+        <>
+          <motion.button
+            type="button"
+            aria-label="Fechar menu"
+            className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm lg:hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            onClick={onClose}
+          />
+          <motion.aside
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menu de navegação"
+            className="fixed inset-y-0 right-0 z-[110] flex h-[100dvh] w-[min(88vw,24rem)] flex-col gap-8 border-l border-gold/15 bg-background px-6 py-6 shadow-[-24px_0_60px_-24px_rgba(0,0,0,0.7)] lg:hidden"
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={spring.snappy}
+          >
+            <div className="flex items-center justify-between">
+              <Logo />
+              <div className="flex items-center gap-2">
+                <AnimatedThemeToggler
+                  duration={550}
+                  className="grid h-10 w-10 place-items-center rounded-full border border-gold/25 text-gold transition-[transform,background-color] duration-200 ease-out hover:bg-gold/10 active:scale-[0.94] [&_svg]:h-4 [&_svg]:w-4"
+                />
+                <button
+                  type="button"
+                  aria-label="Fechar menu"
+                  className="grid h-10 w-10 place-items-center rounded-full border border-gold/25 text-gold transition-[transform,background-color] duration-200 ease-out hover:bg-gold/10 active:scale-[0.94]"
+                  onClick={onClose}
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+            <nav className="flex flex-col divide-y divide-border/60">
+              {navItems.map((item, index) => (
+                <motion.a
+                  key={item.href}
+                  href={item.href}
+                  className="py-4 text-lg font-medium text-foreground/85 transition-colors hover:text-gold"
+                  onClick={onClose}
+                  initial={{ opacity: 0, x: 16 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ ...spring.default, delay: 0.08 + index * 0.05 }}
+                >
+                  {item.label}
+                </motion.a>
+              ))}
+            </nav>
+            <Button asChild variant="whatsapp" size="lg" className="mt-auto">
+              <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">
+                <WhatsApp className="text-[20px]!" />
+                Falar no WhatsApp
+              </a>
+            </Button>
+          </motion.aside>
+        </>
+      )}
+    </AnimatePresence>,
+    document.body,
+  );
+}
 
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
@@ -26,26 +115,37 @@ export function SiteHeader() {
   useEffect(() => {
     if (!open) {
       document.body.style.removeProperty("overflow");
+      document.documentElement.style.removeProperty("overflow");
       return;
     }
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
     window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.removeProperty("overflow");
+      document.documentElement.style.removeProperty("overflow");
       window.removeEventListener("keydown", onKey);
     };
   }, [open]);
 
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 1024px)");
+    const closeOnDesktop = () => media.matches && setOpen(false);
+    media.addEventListener("change", closeOnDesktop);
+    return () => media.removeEventListener("change", closeOnDesktop);
+  }, []);
+
   return (
-    <header
-      className={cn(
-        // Translucent chrome: content scrolls underneath a real material layer.
-        "fixed inset-x-0 top-0 z-50 transition-[background-color,backdrop-filter] duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]",
-        scrolled ? "glass-strong" : "bg-transparent",
-      )}
-    >
-      <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-4 sm:px-8 lg:px-12">
+    <>
+      <header
+        className={cn(
+          // Translucent chrome: content scrolls underneath a real material layer.
+          "fixed inset-x-0 top-0 z-50 transition-[background-color,backdrop-filter] duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]",
+          scrolled ? "glass-strong" : "bg-transparent",
+        )}
+      >
+        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-4 sm:px-8 lg:px-12">
         <Link
           href="/"
           aria-label="Ramos & Pereira Advocacia — início"
@@ -67,6 +167,8 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-3">
+          <AnimatedThemeToggler duration={550} className={iconButton} />
+
           <InteractiveHoverButton
             href={whatsappUrl()}
             type="whatsapp"
@@ -78,83 +180,25 @@ export function SiteHeader() {
           <button
             type="button"
             aria-label="Abrir menu"
-            className="grid h-11 w-11 place-items-center rounded-full border border-gold/25 text-gold transition-[transform,background-color] duration-200 ease-out hover:bg-gold/10 active:scale-[0.94] lg:hidden"
+            className={cn(iconButton, "lg:hidden")}
             onClick={() => setOpen(true)}
           >
             <Menu className="h-5 w-5" strokeWidth={1.75} />
           </button>
         </div>
-      </div>
+        </div>
 
-      {/* Scroll-edge effect — a soft fade where content meets floating chrome,
+        {/* Scroll-edge effect — a soft fade where content meets floating chrome,
           instead of a hard 1px divider (Apple §12). */}
-      <div
-        aria-hidden
-        className={cn(
-          "pointer-events-none absolute inset-x-0 top-full h-px gold-hairline transition-opacity duration-500",
-          scrolled ? "opacity-100" : "opacity-0",
-        )}
-      />
-
-      {/* Mobile drawer */}
-      <AnimatePresence>
-        {open && (
-          <>
-            <motion.div
-              className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-              onClick={() => setOpen(false)}
-            />
-            <motion.aside
-              role="dialog"
-              aria-modal="true"
-              aria-label="Menu de navegação"
-              className="fixed right-0 top-0 z-50 flex h-full w-[82vw] max-w-[340px] flex-col gap-8 border-l border-gold/15 glass-strong px-6 py-6 lg:hidden"
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              // Drawer spring — Apple: damping 0.8, response 0.3 (a little momentum).
-              transition={spring.snappy}
-            >
-              <div className="flex items-center justify-between">
-                <Logo />
-                <button
-                  type="button"
-                  aria-label="Fechar menu"
-                  className="grid h-10 w-10 place-items-center rounded-full border border-gold/25 text-gold transition-[transform,background-color] duration-200 ease-out hover:bg-gold/10 active:scale-[0.94]"
-                  onClick={() => setOpen(false)}
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              </div>
-              <nav className="flex flex-col divide-y divide-border/60">
-                {navItems.map((item, i) => (
-                  <motion.a
-                    key={item.href}
-                    href={item.href}
-                    className="py-4 text-lg font-medium text-foreground/85 transition-colors hover:text-gold"
-                    onClick={() => setOpen(false)}
-                    initial={{ opacity: 0, x: 16 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ ...spring.default, delay: 0.08 + i * 0.05 }}
-                  >
-                    {item.label}
-                  </motion.a>
-                ))}
-              </nav>
-              <Button asChild variant="whatsapp" size="lg" className="mt-auto">
-                <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">
-                  <WhatsApp className="text-[20px]!" />
-                  Falar no WhatsApp
-                </a>
-              </Button>
-            </motion.aside>
-          </>
-        )}
-      </AnimatePresence>
-    </header>
+        <div
+          aria-hidden
+          className={cn(
+            "pointer-events-none absolute inset-x-0 top-full h-px gold-hairline transition-opacity duration-500",
+            scrolled ? "opacity-100" : "opacity-0",
+          )}
+        />
+      </header>
+      <MobileDrawer open={open} onClose={() => setOpen(false)} />
+    </>
   );
 }

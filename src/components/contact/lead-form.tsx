@@ -4,7 +4,7 @@ import { useState, type FormEvent } from "react";
 import { Send } from "lucide-react";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { SpecularCta } from "@/components/ui/specular-cta";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -89,10 +89,15 @@ export function LeadForm({ variant = "full", className }: LeadFormProps) {
         />
       </div>
 
-      <Button type="submit" size="lg" disabled={sending} className="mt-1 w-full sm:w-auto">
-        <Send className="h-4 w-4" />
+      <SpecularCta
+        type="submit"
+        size="md"
+        disabled={sending}
+        className="mt-1 w-full sm:w-auto"
+      >
+        <Send />
         {sending ? "Abrindo WhatsApp…" : "Enviar mensagem"}
-      </Button>
+      </SpecularCta>
 
       <p className="text-xs text-muted-foreground/80">
         Ao enviar, você será direcionado ao nosso WhatsApp com a mensagem já

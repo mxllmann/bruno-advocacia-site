@@ -3,7 +3,7 @@
 import { motion, type Variants } from "framer-motion";
 import { site, whatsappUrl } from "@/lib/site";
 import { spring } from "@/lib/motion";
-import { Button } from "@/components/ui/button";
+import { SpecularCta } from "@/components/ui/specular-cta";
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
 
 const container: Variants = {
@@ -30,13 +30,11 @@ export function Hero() {
       id="top"
       className="grain relative isolate flex min-h-svh items-start overflow-hidden bg-background pt-28 pb-[46svh] sm:items-center sm:pt-32 sm:pb-24"
     >
-      {/* Hero artwork keeps its intentionally dark left half for copy contrast. */}
+      {/* Hero artwork + scrim both swap with the theme so the copy side keeps
+          its contrast: a light marble wash in light mode, warm near-black in dark. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute right-0 bottom-0 -z-10 h-[48svh] w-full bg-cover bg-[position:68%_center] bg-no-repeat sm:inset-0 sm:h-auto sm:w-auto sm:bg-contain sm:bg-right"
-        style={{
-          backgroundImage: "url('/background.png')",
-        }}
+        className="hero-art hero-frame pointer-events-none absolute right-0 bottom-0 -z-10 h-[48svh] w-full sm:inset-0 sm:h-auto sm:w-auto"
       />
       <div
         aria-hidden
@@ -44,7 +42,7 @@ export function Hero() {
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(10,9,8,0.94)_0%,rgba(10,9,8,0.78)_48%,rgba(10,9,8,0.20)_72%,rgba(10,9,8,0.68)_100%)] sm:bg-[linear-gradient(90deg,rgba(10,9,8,0.72)_0%,rgba(10,9,8,0.46)_42%,rgba(10,9,8,0.14)_72%),linear-gradient(180deg,rgba(10,9,8,0.30)_0%,rgba(10,9,8,0)_42%,rgba(10,9,8,0.62)_100%)]"
+        className="hero-scrim pointer-events-none absolute inset-0 -z-10"
       />
 
       <motion.div
@@ -85,12 +83,20 @@ export function Hero() {
 
         <motion.div
           variants={item}
-          className="mt-8 flex flex-wrap items-center gap-3 sm:mt-10"
+          className="mt-8 grid w-full max-w-xl grid-cols-1 gap-3 sm:mt-10 sm:grid-cols-2"
         >
-          <Button asChild size="lg">
-            <a href="#contato">Fale com um advogado</a>
-          </Button>
-          <InteractiveHoverButton href={whatsappUrl()} type="whatsapp">
+          <SpecularCta
+            href="#contato"
+            size="md"
+            className="h-13 w-full text-base"
+          >
+            Fale com um advogado
+          </SpecularCta>
+          <InteractiveHoverButton
+            href={whatsappUrl()}
+            type="whatsapp"
+            className="w-full justify-center text-base"
+          >
             Chamar no WhatsApp
           </InteractiveHoverButton>
         </motion.div>

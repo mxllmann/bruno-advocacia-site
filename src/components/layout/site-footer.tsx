@@ -1,8 +1,8 @@
+import Image from "next/image";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import GitHub from "@mui/icons-material/GitHub";
 import LinkedIn from "@mui/icons-material/LinkedIn";
 import { site, navItems } from "@/lib/site";
-import { Logo } from "@/components/brand/logo";
 
 export function SiteFooter() {
   const year = 2026;
@@ -11,7 +11,13 @@ export function SiteFooter() {
     <footer className="border-t border-gold/15 bg-surface">
       <div className="mx-auto grid w-full max-w-7xl gap-10 px-5 py-14 sm:px-8 md:grid-cols-[1.4fr_1fr_1.2fr] lg:px-12">
         <div className="flex flex-col gap-5">
-          <Logo />
+          <Image
+            src="/logo/logo.png"
+            alt="Ramos & Pereira Advocacia"
+            width={1899}
+            height={893}
+            className="h-auto w-52"
+          />
           <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
             {site.tagline}
           </p>

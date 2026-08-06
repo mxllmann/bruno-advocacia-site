@@ -8,11 +8,11 @@ export default function NotFound() {
     <section className="grain relative isolate flex min-h-svh items-center overflow-hidden bg-background px-5 pt-32 pb-24 sm:px-8 lg:px-12">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 bg-[url('/background.png')] bg-cover bg-[position:70%_center] opacity-45 sm:bg-right"
+        className="hero-art pointer-events-none absolute inset-0 -z-10 bg-cover bg-[position:70%_center] opacity-45 sm:bg-right"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(10,9,8,0.94)_0%,rgba(10,9,8,0.82)_48%,rgba(10,9,8,0.42)_100%),linear-gradient(180deg,rgba(10,9,8,0.36)_0%,rgba(10,9,8,0.82)_100%)]"
+        className="hero-scrim-strong pointer-events-none absolute inset-0 -z-10"
       />
 
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-8">

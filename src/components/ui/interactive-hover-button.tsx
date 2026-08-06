@@ -20,11 +20,13 @@ export function InteractiveHoverButton({
   const Component = href ? "a" : "button";
 
   // Rest state: black pill + gold border. Hover: the "explosion" floods the pill.
+  // Border opacity is 45% to match the SpecularButton's resting rim (baseColor
+  // var(--gold) rendered at the shader's 0.45 base intensity) — same color, both themes.
   const base = isWhatsapp
-    ? "border-gold/70 bg-background text-gold hover:border-[#00c307] hover:bg-[#00c307]"
-    : "border-gold bg-gold text-[#0b0b0d]";
+    ? "border-gold/45 bg-background text-gold hover:border-[#00c307] hover:bg-[#00c307]"
+    : "border-gold bg-gold text-gold-contrast";
   const explosion = isWhatsapp ? "bg-[#00c307]" : "bg-gold-soft";
-  const hoverText = isWhatsapp ? "text-white" : "text-[#0b0b0d]";
+  const hoverText = isWhatsapp ? "text-white" : "text-gold-contrast";
 
   return (
     <Component
@@ -49,7 +51,7 @@ export function InteractiveHoverButton({
           {isWhatsapp ? (
             <WhatsApp className="relative z-10 text-[26px]! text-white" />
           ) : (
-            <ArrowRight className="relative z-10 h-4 w-4 text-[#0b0b0d]" />
+            <ArrowRight className="relative z-10 h-4 w-4 text-gold-contrast" />
           )}
         </div>
 

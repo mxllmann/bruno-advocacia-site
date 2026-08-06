@@ -14,6 +14,8 @@
   --color-gold-soft: var(--gold-soft);
   --color-gold-bright: var(--gold-bright);
   --color-gold-deep: var(--gold-deep);
+  /* Readable ink to place *on top of* a solid gold fill (buttons, selection). */
+  --color-gold-contrast: var(--gold-contrast);
 
   --font-sans: var(--font-inter);
   --font-serif: var(--font-marcellus);
@@ -33,7 +35,35 @@
 :root {
   --radius: 0.875rem;
 
-  /* Warm near-black — a touch of brown so the gold reads as light on wood,
+  /* ---------- Light theme (default) ----------
+     Warm ivory / parchment paper, deep champagne gold and charcoal ink —
+     the same identity as the dark theme, mirrored onto a bright surface. */
+  --background: #f7f3ec;
+  --foreground: #22201a;
+
+  --surface: #fffdf7;
+  --surface-2: #efe7d8;
+  --border: #e4dbc9;
+  --muted: #f0e9dc;
+  --muted-foreground: #615a4b;
+
+  /* Deeper champagne so gold reads with contrast on a light surface — small
+     uppercase labels need to clear ~4.5:1 against the ivory background. */
+  --gold: #8f6c2e;
+  --gold-soft: #a9853f;
+  --gold-bright: #c4a35c;
+  --gold-deep: #715727;
+  --gold-contrast: #23201a;
+
+  /* Translucent material tints (used with backdrop-filter). These reference
+     --background lazily, so they follow whichever theme is active. */
+  --glass: color-mix(in oklab, var(--background) 62%, transparent);
+  --glass-strong: color-mix(in oklab, var(--background) 82%, transparent);
+}
+
+.dark {
+  /* ---------- Dark theme ----------
+     Warm near-black — a touch of brown so the gold reads as light on wood,
      not a cold UI accent. */
   --background: #0a0908;
   --foreground: #ece7dc;
@@ -49,10 +79,7 @@
   --gold-soft: #d6c199;
   --gold-bright: #e7d8b0;
   --gold-deep: #9a8557;
-
-  /* Translucent material tints (used with backdrop-filter) */
-  --glass: color-mix(in oklab, var(--background) 62%, transparent);
-  --glass-strong: color-mix(in oklab, var(--background) 82%, transparent);
+  --gold-contrast: #0a0908;
 }
 
 @layer base {
@@ -97,7 +124,7 @@
 
   ::selection {
     background: var(--gold);
-    color: #0a0908;
+    color: var(--gold-contrast);
   }
 
   :focus-visible {
@@ -167,16 +194,131 @@
   );
 }
 
-/* Grain overlay — adds tactile depth to flat dark surfaces without hurting text. */
+/* Grain overlay — adds tactile depth to flat surfaces without hurting text.
+   Light paper takes a gentler soft-light pass; dark wood a stronger overlay. */
 .grain::before {
   content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
   z-index: 0;
+  opacity: 0.16;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.dark .grain::before {
   opacity: 0.4;
   mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------- Hero / cover artwork (subject on the right, copy on the left) ----------
+   The image and the scrim both swap with the theme so the copy side stays
+   legible: a light ivory wash in light mode, a warm near-black in dark. */
+.hero-art {
+  background-image: url("/background-light.png");
+}
+.dark .hero-art {
+  background-image: url("/background.png");
+}
+
+/* Homepage hero framing (desktop). The light photo is shot wider/looser than
+   the dark one, so on ≥sm we zoom it in (scale to 118% of the hero height,
+   anchored bottom-right) to match the dark version's larger gavel + scales.
+   Mobile keeps a simple cover crop for both themes. */
+.hero-frame {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 68% center;
+}
+@media (min-width: 640px) {
+  .hero-frame {
+    background-size: auto 125%;
+    /* Anchor bottom-right, then nudge the photo DOWN so the gavel base runs off
+       the bottom edge like the dark version (hides the marble reflection).
+       ▸ Ajuste aqui: aumente os 140px para descer mais, diminua para subir. */
+    background-position: right calc(100% + 115px);
+  }
+  .dark .hero-frame {
+    background-size: contain;
+    background-position: right center;
+  }
+}
+
+.hero-scrim {
+  background: linear-gradient(
+    180deg,
+    rgba(247, 243, 236, 0.92) 0%,
+    rgba(247, 243, 236, 0.78) 46%,
+    rgba(247, 243, 236, 0.3) 70%,
+    rgba(247, 243, 236, 0.8) 100%
+  );
+}
+.dark .hero-scrim {
+  background: linear-gradient(
+    180deg,
+    rgba(10, 9, 8, 0.94) 0%,
+    rgba(10, 9, 8, 0.78) 48%,
+    rgba(10, 9, 8, 0.2) 72%,
+    rgba(10, 9, 8, 0.68) 100%
+  );
+}
+@media (min-width: 640px) {
+  .hero-scrim {
+    background:
+      linear-gradient(
+        90deg,
+        rgba(247, 243, 236, 0.86) 0%,
+        rgba(247, 243, 236, 0.56) 44%,
+        rgba(247, 243, 236, 0.12) 74%
+      ),
+      linear-gradient(
+        180deg,
+        rgba(247, 243, 236, 0.35) 0%,
+        rgba(247, 243, 236, 0) 44%,
+        rgba(247, 243, 236, 0.7) 100%
+      );
+  }
+  .dark .hero-scrim {
+    background:
+      linear-gradient(
+        90deg,
+        rgba(10, 9, 8, 0.72) 0%,
+        rgba(10, 9, 8, 0.46) 42%,
+        rgba(10, 9, 8, 0.14) 72%
+      ),
+      linear-gradient(
+        180deg,
+        rgba(10, 9, 8, 0.3) 0%,
+        rgba(10, 9, 8, 0) 42%,
+        rgba(10, 9, 8, 0.62) 100%
+      );
+  }
+}
+
+/* Heavier single-column scrim used by the 404 cover. */
+.hero-scrim-strong {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(247, 243, 236, 0.94) 0%,
+      rgba(247, 243, 236, 0.82) 48%,
+      rgba(247, 243, 236, 0.5) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(247, 243, 236, 0.4) 0%,
+      rgba(247, 243, 236, 0.82) 100%
+    );
+}
+.dark .hero-scrim-strong {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(10, 9, 8, 0.94) 0%,
+      rgba(10, 9, 8, 0.82) 48%,
+      rgba(10, 9, 8, 0.42) 100%
+    ),
+    linear-gradient(180deg, rgba(10, 9, 8, 0.36) 0%, rgba(10, 9, 8, 0.82) 100%);
 }
 
 .no-visible-scrollbar {
@@ -184,5 +326,37 @@
   -ms-overflow-style: none;
 }
 .no-visible-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ---------- AnimatedThemeToggler (view-transition theme swap) ---------- */
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Scoped to AnimatedThemeToggler — the toggler sets the data-attribute and the
+   variable only during a theme toggle. */
+html[data-magicui-theme-vt="active"]::view-transition-group(root) {
+  animation-duration: var(--magicui-theme-toggle-vt-duration);
+}
+
+/* Pin the collapsed clip-path so Firefox does not paint the new theme
+   unclipped between snapshot and the ready.then() JS animation. */
+html[data-magicui-theme-vt="active"]::view-transition-new(root) {
+  clip-path: var(--magicui-theme-vt-clip-from);
+}
+
+/* Theme-toggle icons: render both, show the one matching the active theme via
+   the `.dark` class (applied before first paint) — no icon flash on load. */
+.theme-icon-sun {
+  display: none;
+}
+html.dark .theme-icon-sun {
+  display: block;
+}
+html.dark .theme-icon-moon {
   display: none;
 }

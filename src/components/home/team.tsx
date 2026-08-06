@@ -29,7 +29,8 @@ export function Team() {
               <MagicCard
                 className="h-full rounded-3xl"
                 gradientSize={260}
-                gradientOpacity={0}
+                gradientColor="color-mix(in oklab, var(--gold) 18%, transparent)"
+                gradientOpacity={0.5}
               >
                 <article className="flex h-full flex-col overflow-hidden rounded-[inherit] bg-surface/50">
                   {/* Placeholder portrait */}

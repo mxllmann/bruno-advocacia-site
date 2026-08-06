@@ -9,7 +9,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "bg-gold text-[#0a0908] font-medium shadow-[0_1px_0_0_color-mix(in_oklab,var(--gold-bright)_60%,transparent)_inset,0_10px_30px_-12px_color-mix(in_oklab,var(--gold)_70%,transparent)] hover:bg-gold-soft",
+          "bg-gold text-gold-contrast font-medium shadow-[0_1px_0_0_color-mix(in_oklab,var(--gold-bright)_60%,transparent)_inset,0_10px_30px_-12px_color-mix(in_oklab,var(--gold)_70%,transparent)] hover:bg-gold-soft",
         outline:
           "border border-gold/40 text-gold hover:border-gold hover:bg-gold/5",
         ghost: "text-foreground/80 hover:text-gold",
